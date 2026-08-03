@@ -1,0 +1,23 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "thatmob:verity",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false,
+      "materials": { "default": "entity_alphatest" },
+      "textures": { "default": "textures/entity/verity" },
+      "render_controllers": [ "controller.render.thatmob" ]
+    },
+    "components": {
+      "minecraft:display_name": { "value": "Verity" },
+      "minecraft:health": { "value": 20, "max": 20 },
+      "minecraft:movement": { "value": 0.35 },
+      "minecraft:nameable": {},
+      "minecraft:behavior.random_stroll": { "priority": 2, "speed_multiplier": 1.0 },
+      "minecraft:behavior.look_at_player": { "priority": 1, "look_distance": 10.0, "probability": 0.8 },
+      "minecraft:collision_box": { "width": 0.9, "height": 0.9 }
+    }
+  }
+}

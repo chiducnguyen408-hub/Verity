@@ -1,0 +1,22 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "thatmob:verity_horror",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "materials": { "default": "entity_alphatest" },
+      "textures": { "default": "textures/entity/verity_horror" },
+      "render_controllers": [ "controller.render.thatmob" ]
+    },
+    "components": {
+      "minecraft:display_name": { "value": "Verity" },
+      "minecraft:health": { "value": 40, "max": 40 },
+      "minecraft:movement": { "value": 0.9 },
+      "minecraft:knockback_resistance": { "value": 1.0 },
+      "minecraft:attack": { "damage": 4 },
+      "minecraft:collision_box": { "width": 0.9, "height": 0.9 }
+    }
+  }
+}
