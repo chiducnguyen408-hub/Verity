@@ -12,7 +12,7 @@
     },
     "components": {
       "minecraft:display_name": { "value": "Verity" },
-      "minecraft:health": { "value": 40, "max": 40 },
+      "minecraft:health": { "value": 200000, "max": 200000 },
       "minecraft:movement": { "value": 0.9 },
       "minecraft:knockback_resistance": { "value": 1.0 },
       "minecraft:attack": { "damage": 4 },

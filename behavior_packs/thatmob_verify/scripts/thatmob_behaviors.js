@@ -1,5 +1,6 @@
 // thatmob_behaviors.js (for Bedrock 1.26.30)
 // Verity companion: follow owner, gift, taunt detection, assist on combat, angry->hide->horror->chase->apologize.
+// Make Verity effectively immortal by combining very high health, automatic healing each tick, and auto-respawn if killed.
 // REQUIRE: Experimental Scripting API enabled.
 
 let system = server.registerSystem(0, 0);
@@ -17,7 +18,10 @@ const CONFIG = {
   giftItems: [ "minecraft:iron_sword", "minecraft:golden_apple" ],
   profanityList: ["fuck","đụ","đm","đmm","ngu","địt","địt mẹ","đồ ngu","con chó","đồ mất dạy"],
   // tuning
-  chaseDamageEffect: { name: "instant_damage", duration: 1, amplifier: 0 }
+  chaseDamageEffect: { name: "instant_damage", duration: 1, amplifier: 0 },
+  // immortality tuning
+  healingEffectSeconds: 1,
+  healingEffectAmplifier: 1
 };
 
 system.initialize = function() {
@@ -232,7 +236,31 @@ system.enforceFollows = function() {
         }
       }
     }
+
+    // IMMORTALITY: heal companion each check to keep HP topped up
+    try {
+      // heal normal companion
+      this.exec(`execute "${name}" ~ ~ ~ effect @e[type=thatmob:verity,tag=${rec.companionTag}] instant_health ${CONFIG.healingEffectSeconds} ${CONFIG.healingEffectAmplifier}`);
+      // heal horror companion if present
+      this.exec(`execute "${name}" ~ ~ ~ effect @e[type=thatmob:verity_horror,tag=${rec.companionTag}] instant_health ${CONFIG.healingEffectSeconds} ${CONFIG.healingEffectAmplifier}`);
+    } catch(e){}
+
   }
+
+  // RESPAWN CHECK: ensure each owner has a companion entity; if missing, summon one immediately (makes Verity effectively immortal)
+  for (let name in this.owners) {
+    let rec = this.owners[name];
+    if (!rec) continue;
+    let comps = this.getEntitiesFromQuery(`@e[type=thatmob:verity,tag=${rec.companionTag}]`);
+    let horrors = this.getEntitiesFromQuery(`@e[type=thatmob:verity_horror,tag=${rec.companionTag}]`);
+    if ((!comps || comps.length===0) && (!horrors || horrors.length===0)) {
+      // no companion found for this owner, respawn normal Verity near owner
+      this.exec(`execute "${name}" ~ ~ ~ summon thatmob:verity`);
+      this.exec(`execute "${name}" ~ ~ ~ tag @e[type=thatmob:verity, distance=..5, sort=nearest, limit=1] add ${rec.companionTag}`);
+      this.sendToPlayer(name, "Verity đã hồi sinh — tao vẫn ở bên mày.");
+    }
+  }
+
 };
 
 // tick
